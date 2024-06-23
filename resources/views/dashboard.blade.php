@@ -8,8 +8,13 @@
     @vite('resources/css/app.css')
 </head>
 <body>
-    <button class="btn btn-success btn-sm">
-        teste
-    </button>
+    <div>
+        <form action="">
+            <h1>Crie uma Venda</h1>
+            <select name="" id=""></select>
+            <button>criar novo cliente</button>
+            <button>enviar</button>
+        </form>
+    </div>
 </body>
 </html>
