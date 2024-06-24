@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ProdutoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,8 +30,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// clientes
 Route::get('/api/clientes', [ClienteController::class, 'index']);
 Route::get('/clientes', [ClienteController::class, 'index']);
 Route::post('/clientes', [ClienteController::class, 'store']);
+
+// produtos
+Route::get('/api/produtos', [ProdutoController::class, 'index']);
+Route::get('/produtos', [ProdutoController::class, 'index']);
+Route::post('/produtos', [ProdutoController::class, 'store']);
+Route::get('/api/produtos/{id}', [ProdutoController::class, 'show']);
 
 require __DIR__.'/auth.php';
