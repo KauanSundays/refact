@@ -3,17 +3,32 @@ document.addEventListener('DOMContentLoaded', function () {
     const produtoSelect = document.getElementById('produto-select');
     const produtoValorInput = document.getElementById('produto-valor');
 
-    document.getElementById('create-cliente-form').addEventListener('submit', function (event) {
-        const cpfInput = document.getElementById('cliente-cpf');
-        const cpfValue = cpfInput.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    document.getElementById('create-produto-form').addEventListener('submit', async function (event) {
+        event.preventDefault();
+        const nome = document.getElementById('produto-nome').value;
+        const valor = document.getElementById('produto-valor').value;
 
-        if (cpfValue.length !== 11) {
-            alert('CPF inválido! Por favor, insira todos os números do CPF.');
-            event.preventDefault(); // Impede o envio do formulário se o CPF não estiver completo
+        try {
+            const response = await axios.post('/clientes', { nome, valor });
+            $('#createProdutoModal').modal('hide');
+            alert(response.data.message);
+            loadProdutos();
+        } catch (error) {
+            console.error('Erro ao criar produto:', error);
         }
     });
 
-    
+    document.getElementById('create-cliente-form').addEventListener('submit', function (event) {
+        const cpfInput = document.getElementById('cliente-cpf');
+        const cpfValue = cpfInput.value.replace(/\D/g, '');
+
+        if (cpfValue.length !== 11) {
+            alert('CPF inválido! Por favor, insira todos os números do CPF.');
+            event.preventDefault();
+        }
+    });
+
+
     const loadClientes = async () => {
         try {
             const response = await axios.get('/api/clientes');
@@ -55,7 +70,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $(document).ready(function () {
         $('#cliente-cpf').mask('000.000.000-00');
-        $('#produto-valor').mask('0000000000.00', { reverse: true });
+        $('#produto-valor-creater').mask('0000000000.00', { reverse: true });
+        $('#qtd').mask('00');
     });
 
     produtoSelect.addEventListener('change', async function () {
@@ -78,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('create-cliente-form').addEventListener('submit', async function (event) {
         event.preventDefault();
-        
         const nome = document.getElementById('cliente-nome').value;
         const cpf = document.getElementById('cliente-cpf').value;
 
@@ -95,5 +110,11 @@ document.addEventListener('DOMContentLoaded', function () {
     function formatarValor(valor) {
         const valorFormatado = parseFloat(valor).toFixed(2);
         return `R$ ${valorFormatado}`;
-    }
+    };
+
+    document.getElementById('produto-quantidade').addEventListener('input', function (e) {
+        if (this.value.length > 2) {
+            this.value = this.value.slice(0, 2);
+        }
+    });
 });

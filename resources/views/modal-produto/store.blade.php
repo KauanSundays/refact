@@ -1,8 +1,8 @@
-  <div class="modal fade" id="createProdutoModal" tabindex="-1" role="dialog" aria-labelledby="createProdutoModalLabel" aria-hidden="true">
+<div class="modal fade" id="createProdutoModal" tabindex="-1" role="dialog" aria-labelledby="createProdutoModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createProdutoModalLabel">Criar Novo Produto</h5>
+                <h5 class="modal-title" id="createProdutoModal">Criar Novo Produto</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -15,7 +15,7 @@
                     </div>
                     <div class="form-group">
                         <label for="produto-valor">Valor do Produto</label>
-                        <input type="text" class="form-control" id="produto-valor" required>
+                        <input type="text" class="form-control" id="produto-valor-creater" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </form>                
