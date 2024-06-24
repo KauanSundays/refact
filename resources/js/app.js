@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const produtoSelect = document.getElementById('produto-select');
     const produtoValorInput = document.getElementById('produto-valor');
 
+    const formVenda = document.querySelector('#form-venda');
+    const abaPagamento = document.querySelector('#aba-pagamento');
+    const valorTotalSpan = document.querySelector('#valor-total');
+
     document.getElementById('create-produto-form').addEventListener('submit', async function (event) {
         event.preventDefault();
         const nome = document.getElementById('produto-nome').value;
@@ -133,4 +137,27 @@ document.addEventListener('DOMContentLoaded', function () {
             this.value = this.value.slice(0, 2);
         }
     });
+
+    document.getElementById('produto-quantidade').addEventListener('input', function (e) {
+        if (this.value.length > 2) {
+            this.value = this.value.slice(0, 2);
+        }
+    });
+    
+    document.getElementById('form-venda').addEventListener('submit', function (event) {
+        event.preventDefault(); // Impede o envio padrão do formulário
+
+        // Mostra a aba de pagamento e oculta a aba de venda
+        document.getElementById('aba-venda').style.display = 'none';
+        document.getElementById('aba-pagamento').style.display = 'block';
+
+        // Define o valor total a pagar na aba de pagamento
+        document.getElementById('valor-total-pagar').value = valorTotalVenda.toFixed(2);
+    });
+
+    function voltarParaVenda() {
+        document.getElementById('aba-venda').style.display = 'block';
+        document.getElementById('aba-pagamento').style.display = 'none';
+    }
+    
 });

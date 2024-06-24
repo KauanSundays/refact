@@ -13,67 +13,91 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-10">
-                <form action="">
-                    <h1 class="mb-4">Crie uma Venda</h1>
-                    <div class="mb-3">
-                        <label for="cliente-select" class="form-label">Clientes</label>
-                        <div class="d-flex align-items-center">
-                            <select class="form-select me-2" name="cliente" id="cliente-select"></select>
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createClienteModal">
-                                Criar novo cliente
-                            </button>
-                        </div>
-                    </div>
-                    <div class="mb-1">
-                        <label for="">Quer criar um produto novo?</label>
-                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createProdutoModal">
-                            Criar novo Produto
-                        </button>
-                    </div>
-                    <div class="mb-3">
-                        <div class="d-flex flex-wrap align-items-center">
-                            <div class="me-3 mb-2">
-                                <label for="produto-select" class="form-label">Produto</label>
-                                <select class="form-select" name="produto" id="produto-select">
-                                    <option value="">Selecione um produto</option>
-                                </select>
-                            </div>
-                            <div class="me-3 mb-2">
-                                <label for="produto-valor" class="form-label">Valor</label>
-                                <input type="text" class="form-control" id="produto-valor" disabled>
-                            </div>
-                            <div class="me-3 mb-2">
-                                <label for="produto-quantidade" class="form-label">Quantidade</label>
-                                <input type="number" class="form-control" id="produto-quantidade" min="1" max="99" placeholder="Qtd" value="1" required>
-                            </div>                            
-                            <div class="me-3 mb-1">
-                                <button type="button" class="btn btn-primary btn-sm" onclick="adicionarProduto()">
-                                    +
+                <!-- Aba 1: Venda -->
+                <div id="aba-venda">
+                    <form id="form-venda">
+                        <h1 class="mb-4">Crie uma Venda</h1>
+                        <div class="mb-3">
+                            <label for="cliente-select" class="form-label">Clientes</label>
+                            <div class="d-flex align-items-center">
+                                <select class="form-select me-2" name="cliente" id="cliente-select"></select>
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createClienteModal">
+                                    Criar novo cliente
                                 </button>
                             </div>
                         </div>
-                    </div>
+                        <div class="mb-1">
+                            <label for="">Quer criar um produto novo?</label>
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createProdutoModal">
+                                Criar novo Produto
+                            </button>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex flex-wrap align-items-center">
+                                <div class="me-3 mb-2">
+                                    <label for="produto-select" class="form-label">Produto</label>
+                                    <select class="form-select" name="produto" id="produto-select">
+                                        <option value="">Selecione um produto</option>
+                                    </select>
+                                </div>
+                                <div class="me-3 mb-2">
+                                    <label for="produto-valor" class="form-label">Valor</label>
+                                    <input type="text" class="form-control" id="produto-valor" disabled>
+                                </div>
+                                <div class="me-3 mb-2">
+                                    <label for="produto-quantidade" class="form-label">Quantidade</label>
+                                    <input type="number" class="form-control" id="produto-quantidade" min="1" max="99" placeholder="Qtd" value="1" required>
+                                </div>                            
+                                <div class="me-3 mb-1">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="adicionarProduto()">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div id="produtos-adicionados" style="display: none;">
-                        <h1 class="mb-4">Produtos Adicionados</h1>
-                        <p>Valor total da compra: R$ <span id="valor-total"></span></p>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Produto</th>
-                                    <th>Valor</th>
-                                    <th>Quantidade</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabela-produtos-adicionados">
-                            </tbody>
-                        </table>
-                    </div>                    
-                    
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-success">Enviar</button>
-                    </div>
-                </form>
+                        <div id="produtos-adicionados" style="display: none;">
+                            <h1 class="mb-4">Produtos Adicionados</h1>
+                            <p>Valor total da compra: R$ <span id="valor-total"></span></p>
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Produto</th>
+                                        <th>Valor</th>
+                                        <th>Quantidade</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabela-produtos-adicionados">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-success" id="btnEnviar">Enviar</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div id="aba-pagamento" style="display: none;">
+                    <button type="button" class="btn btn-primary mt-3" onclick="voltarParaVenda()">voltar</button>
+
+                    <h1 class="mb-4">Formulário de Pagamento</h1>
+                    <form id="form-pagamento">
+                        <div class="mb-3">
+                            <label for="metodo-pagamento" class="form-label">Método de Pagamento</label>
+                            <select class="form-select mb-3" id="metodo-pagamento" name="metodoPagamento">
+                                <option value="credito">Cartão de Crédito</option>
+                                <option value="debito">Cartão de Débito</option>
+                                <option value="dinheiro">Dinheiro</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="valor-total-pagar" class="form-label">Valor Total a Pagar</label>
+                            <input type="text" class="form-control" id="valor-total-pagar" value="0.00" disabled>
+                        </div>
+                        <button type="submit" class="btn btn-success">Finalizar Pagamento</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -155,6 +179,11 @@
             } else {
                 alert('Por favor, selecione um produto antes de adicionar.');
             } 
+        }
+
+        function voltarParaVenda() {
+            document.getElementById('aba-venda').style.display = 'block';
+            document.getElementById('aba-pagamento').style.display = 'none';
         }
     </script>
 <script src="resources/js/app.js"></script>
