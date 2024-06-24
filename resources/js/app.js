@@ -6,10 +6,13 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('create-produto-form').addEventListener('submit', async function (event) {
         event.preventDefault();
         const nome = document.getElementById('produto-nome').value;
-        const valor = document.getElementById('produto-valor').value;
+        const valor = document.getElementById('produto-valor-creater').value;
 
         try {
-            const response = await axios.post('/clientes', { nome, valor });
+            const response = await axios.post('/produtos', { nome, valor });
+            document.getElementById('produto-nome').value = '';
+            document.getElementById('produto-valor-creater').value = '';
+
             $('#createProdutoModal').modal('hide');
             alert(response.data.message);
             loadProdutos();
@@ -17,17 +20,44 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Erro ao criar produto:', error);
         }
     });
-
-    document.getElementById('create-cliente-form').addEventListener('submit', function (event) {
+    document.getElementById('create-cliente-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+    
         const cpfInput = document.getElementById('cliente-cpf');
         const cpfValue = cpfInput.value.replace(/\D/g, '');
-
+    
         if (cpfValue.length !== 11) {
-            alert('CPF inválido! Por favor, insira todos os números do CPF.');
-            event.preventDefault();
+            alert('CPF inválido! O CPF deve conter exatamente 11 números.');
+            return;
+        }
+    
+        const nome = document.getElementById('cliente-nome').value;
+    
+        try {
+            const cpfCheckResponse = await axios.get(`/api/clientes/check-cpf/${cpfValue}`);
+            if (cpfCheckResponse.data.exists) {
+                alert('CPF já cadastrado! Insira um CPF diferente.');
+                return;
+            }
+    
+            const createClienteResponse = await axios.post('/clientes', {
+                nome: nome,
+                cpf: cpfValue,
+            });
+    
+            console.log('Cliente criado com sucesso:', createClienteResponse.data.cliente);
+    
+            document.getElementById('cliente-nome').value = '';
+            cpfInput.value = '';
+            $('#createClienteModal').modal('hide');
+            
+            alert(createClienteResponse.data.message);
+            loadClientes(); 
+        } catch (error) {
+            console.error('Erro ao criar cliente:', error);
         }
     });
-
+    
 
     const loadClientes = async () => {
         try {
@@ -92,20 +122,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    document.getElementById('create-cliente-form').addEventListener('submit', async function (event) {
-        event.preventDefault();
-        const nome = document.getElementById('cliente-nome').value;
-        const cpf = document.getElementById('cliente-cpf').value;
-
-        try {
-            const response = await axios.post('/clientes', { nome, cpf });
-            $('#createClienteModal').modal('hide');
-            alert(response.data.message);
-            loadClientes();
-        } catch (error) {
-            console.error('Erro ao criar cliente:', error);
-        }
-    });
 
     function formatarValor(valor) {
         const valorFormatado = parseFloat(valor).toFixed(2);

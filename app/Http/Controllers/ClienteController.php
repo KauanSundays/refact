@@ -27,4 +27,11 @@ class ClienteController extends Controller
 
         return response()->json(['message' => 'Cliente criado com sucesso!', 'cliente' => $cliente]);
     }
+
+    public function checkCpf($cpf)
+    {
+        $cliente = Cliente::where('cpf', $cpf)->exists();
+
+        return response()->json(['exists' => $cliente]);
+    }
 }

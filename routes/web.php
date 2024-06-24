@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/api/clientes', [ClienteController::class, 'index']);
 Route::get('/clientes', [ClienteController::class, 'index']);
 Route::post('/clientes', [ClienteController::class, 'store']);
+Route::get('/api/clientes/check-cpf/{cpf}', [ClienteController::class, 'checkCpf']);
 
 // produtos
 Route::get('/api/produtos', [ProdutoController::class, 'index']);

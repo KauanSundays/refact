@@ -48,7 +48,7 @@
                             </div>                            
                             <div class="me-3 mb-1">
                                 <button type="button" class="btn btn-primary btn-sm" onclick="adicionarProduto()">
-                                    Adicionar produto
+                                    +
                                 </button>
                             </div>
                         </div>

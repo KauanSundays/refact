@@ -1,5 +1,7 @@
 <x-guest-layout>
     <!-- Session Status -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     @vite('resources/css/app.css')
