@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const formVenda = document.querySelector('#form-venda');
     const abaPagamento = document.querySelector('#aba-pagamento');
     const valorTotalSpan = document.querySelector('#valor-total');
+    const valorTotalsInput = document.getElementById('valorTotals');
 
     document.getElementById('create-produto-form').addEventListener('submit', async function (event) {
         event.preventDefault();
@@ -145,14 +146,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.getElementById('form-venda').addEventListener('submit', function (event) {
-        event.preventDefault(); // Impede o envio padrão do formulário
+        event.preventDefault(); 
 
-        // Mostra a aba de pagamento e oculta a aba de venda
         document.getElementById('aba-venda').style.display = 'none';
         document.getElementById('aba-pagamento').style.display = 'block';
 
-        // Define o valor total a pagar na aba de pagamento
-        document.getElementById('valor-total-pagar').value = valorTotalVenda.toFixed(2);
+        const valorTotal = parseFloat(valorTotalSpan.innerText.replace('R$', '').trim());
+
+        abaVenda.style.display = 'none';
+        abaPagamento.style.display = 'block';
     });
 
     function enviarParcelas() {
@@ -174,7 +176,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const parcelasContainer = document.getElementById('parcelas-container');
     const infoParcelas = document.getElementById('info-parcelas');
     const btnEnviarParcelas = document.getElementById('btn-enviar-parcelas');
-    const divParcelas = document.getElementById('div-parcelas'); // Novo elemento div para conter as parcelas
+    const divParcelas = document.getElementById('div-parcelas');
+
+    let valorTotalVenda = 0;
 
     metodoPagamentoSelect.addEventListener('change', function () {
         const metodoSelecionado = metodoPagamentoSelect.value;
@@ -193,20 +197,38 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Número de parcelas inválido. Escolha um valor entre 1 e 12.');
             return;
         }
-    
+        const valorTotalVendaStr = document.getElementById('valorTotals').innerText;
+
+        const valorTotalVenda = parseFloat(valorTotalVendaStr);
+        
+        console.log('Valor total da venda (string):', valorTotalVendaStr);
+        console.log('Valor total da venda (número):', valorTotalVenda);
+
+        const valorParcela = valorTotalVenda / parcelas;
+        console.log(valorParcela);
+
         divParcelas.innerHTML = '';
     
         for (let i = 1; i <= parcelas; i++) {
             const divParcela = document.createElement('div');
             divParcela.classList.add('mb-3'); 
-            divParcela.innerHTML = `<strong>Parcela ${i}:</strong> <input type="text" id="valor-parcela-${i}" class="form-control mb-2" style="width: 100px;" disabled>`;
+            divParcela.innerHTML = `<strong>Parcela ${i}:</strong> <input type="text" id="valor-parcela-${i}" class="form-control mb-2" style="width: 100px;" value="${formatarValor(valorParcela)}" disabled>`;
     
             divParcelas.appendChild(divParcela);
         }
     
         infoParcelas.innerText = `Você está parcelando em ${parcelas} parcelas`;
     });
+
+    function formatarValor(valor) {
+        const valorFormatado = parseFloat(valor).toFixed(2);
+        return `R$ ${valorFormatado}`;
+    }
+
+    valorTotalVenda = 1500;
+    
 });
+
 
 function voltarParaVenda() {
     document.getElementById('aba-pagamento').style.display = 'none';

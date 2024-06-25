@@ -80,7 +80,7 @@
                 
                 <div id="aba-pagamento" style="display: none;">
                     <button type="button" class="btn btn-primary mt-3" onclick="voltarParaVenda()">Voltar para Venda</button>
-                    
+                    <input type="text"style="display: none;" id="valorTotals">
                     <h1 class="mb-4">Formulário de Pagamento</h1>
                     <form id="form-pagamento" class="d-flex flex-column align-items-start">
                         <div class="mb-3 d-flex align-items-center">
@@ -150,6 +150,7 @@
     
             valorTotalVenda += valorAdicionado;
             $('#valor-total').text(valorTotalVenda.toFixed(2)); 
+            $('#valorTotals').text(valorTotalVenda.toFixed(2)); 
 
             if (selectedProductId && tabelaProdutosAdicionados) {
                 let produtoExistente = false;
