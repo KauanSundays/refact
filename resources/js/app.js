@@ -152,6 +152,56 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Evento de submit para criar novo cliente
+    document.getElementById('create-cliente-form').addEventListener('submit', async function (event) {
+        event.preventDefault();
+        
+        const nome = document.getElementById('cliente-nome').value;
+        const cpf = document.getElementById('cliente-cpf').value;
+
+        try {
+            const response = await axios.post('/api/clientes', {
+                nome: nome,
+                cpf: cpf
+            });
+
+            console.log('Novo cliente criado:', response.data);
+            alert('Novo cliente criado com sucesso!');
+            
+            loadClientes();
+            
+            $('#createClienteModal').modal('hide');
+        } catch (error) {
+            console.error('Erro ao criar novo cliente:', error);
+            alert('Erro ao criar novo cliente. Verifique o console para mais detalhes.');
+        }
+    });
+
+    // Evento de submit para criar novo produto
+    document.getElementById('create-produto-form').addEventListener('submit', async function (event) {
+        event.preventDefault();
+        
+        const nomeProduto = document.getElementById('produto-nome').value;
+        const valorProduto = document.getElementById('produto-valor-creater').value;
+
+        try {
+            const response = await axios.post('/api/produtos', {
+                nome: nomeProduto,
+                valor: parseFloat(valorProduto)
+            });
+
+            console.log('Novo produto criado:', response.data);
+            alert('Novo produto criado com sucesso!');
+            
+            loadProdutos();
+            
+            $('#createProdutoModal').modal('hide');
+        } catch (error) {
+            console.error('Erro ao criar novo produto:', error);
+            alert('Erro ao criar novo produto. Verifique o console para mais detalhes.');
+        }
+    });
+
     // Voltar para a venda
     document.getElementById('voltar-venda').addEventListener('click', function () {
         abaPagamento.style.display = 'none';

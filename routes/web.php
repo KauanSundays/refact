@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ProdutoController;
+use App\Http\Controllers\VendaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,5 +42,8 @@ Route::get('/api/produtos', [ProdutoController::class, 'index']);
 Route::get('/produtos', [ProdutoController::class, 'index']);
 Route::post('/produtos', [ProdutoController::class, 'store']);
 Route::get('/api/produtos/{id}', [ProdutoController::class, 'show']);
+
+Route::post('/api/vendas', [VendaController::class, 'store'])->name('vendas.store');
+
 
 require __DIR__.'/auth.php';

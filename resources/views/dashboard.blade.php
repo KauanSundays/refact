@@ -102,6 +102,10 @@
                         <div>
                             <div id="info-parcelas"></div>
                         </div>
+
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-success" id="btn-enviar-pagamento">Enviar Pagamento</button>
+                        </div>
                     </form>
                 
                     <!-- Div para conter as parcelas, abaixo do formulário de pagamento -->
@@ -128,76 +132,119 @@
     <script>
         let primeiroProdutoAdicionado = false;
         let valorTotalVenda = 0;
-    
-        function adicionarProduto() {
-            let valorAdicionado = 0;
-    
-            const produtoSelect = document.getElementById('produto-select');
-            const produtoValorInput = document.getElementById('produto-valor');
-            const produtoQuantidadeInput = document.getElementById('produto-quantidade');
-            const tabelaProdutosAdicionados = document.getElementById('tabela-produtos-adicionados');
-            const divProdutosAdicionados = document.getElementById('produtos-adicionados');
-    
-            const selectedProductId = produtoSelect.value;
-            const selectedProductName = produtoSelect.options[produtoSelect.selectedIndex].text;
-            const selectedProductValue = produtoValorInput.value;
-            const selectedProductQuantity = parseInt(produtoQuantidadeInput.value) || 1;
-    
-            let selectedProductValue2 = produtoValorInput.value.replace('R$', '').trim();
-            selectedProductValue2 = parseFloat(selectedProductValue2);
-            let qtd = parseInt(selectedProductQuantity);
-            valorAdicionado = selectedProductValue2 * qtd;
-    
-            valorTotalVenda += valorAdicionado;
-            $('#valor-total').text(valorTotalVenda.toFixed(2)); 
-            $('#valorTotals').text(valorTotalVenda.toFixed(2)); 
+    // Variável global para armazenar os produtos adicionados
+    let produtosAdicionados = [];
 
-            if (selectedProductId && tabelaProdutosAdicionados) {
-                let produtoExistente = false;
-                const rows = tabelaProdutosAdicionados.getElementsByTagName('tr');
+    function adicionarProduto() {
+        let valorAdicionado = 0;
 
-                for (let i = 0; i < rows.length; i++) {
-                    const cells = rows[i].getElementsByTagName('td');
-                    const cellProductName = cells[0].innerText;
+        const produtoSelect = document.getElementById('produto-select');
+        const produtoValorInput = document.getElementById('produto-valor');
+        const produtoQuantidadeInput = document.getElementById('produto-quantidade');
+        const tabelaProdutosAdicionados = document.getElementById('tabela-produtos-adicionados');
+        const divProdutosAdicionados = document.getElementById('produtos-adicionados');
 
-                    if (cellProductName === selectedProductName) {
-                        const cellProductQuantity = cells[2];
-                        const currentQuantity = parseInt(cellProductQuantity.innerText);
-                        cellProductQuantity.innerText = currentQuantity + selectedProductQuantity;
-                        produtoExistente = true;
-                        break;
-                    }
+        const selectedProductId = produtoSelect.value;
+        const selectedProductName = produtoSelect.options[produtoSelect.selectedIndex].text;
+        const selectedProductValue = produtoValorInput.value;
+        const selectedProductQuantity = parseInt(produtoQuantidadeInput.value) || 1;
+
+        let selectedProductValue2 = produtoValorInput.value.replace('R$', '').trim();
+        selectedProductValue2 = parseFloat(selectedProductValue2);
+        let qtd = parseInt(selectedProductQuantity);
+        valorAdicionado = selectedProductValue2 * qtd;
+
+        valorTotalVenda += valorAdicionado;
+        $('#valor-total').text(valorTotalVenda.toFixed(2)); 
+        $('#valorTotals').text(valorTotalVenda.toFixed(2)); 
+
+        // Adicionar o produto à lista de produtos adicionados
+        const produto = {
+            id: selectedProductId,
+            nome: selectedProductName,
+            valor: selectedProductValue2,
+            quantidade: selectedProductQuantity
+        };
+        produtosAdicionados.push(produto);
+
+        if (selectedProductId && tabelaProdutosAdicionados) {
+            let produtoExistente = false;
+            const rows = tabelaProdutosAdicionados.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                const cellProductName = cells[0].innerText;
+
+                if (cellProductName === selectedProductName) {
+                    const cellProductQuantity = cells[2];
+                    const currentQuantity = parseInt(cellProductQuantity.innerText);
+                    cellProductQuantity.innerText = currentQuantity + selectedProductQuantity;
+                    produtoExistente = true;
+                    break;
                 }
+            }
 
-                if (!produtoExistente) {
-                    const newRow = document.createElement('tr');
-                    newRow.innerHTML = `
-                        <td>${selectedProductName}</td>
-                        <td>${selectedProductValue}</td>
-                        <td>${selectedProductQuantity}</td>
-                    `;
-                    tabelaProdutosAdicionados.appendChild(newRow);
-                }
+            if (!produtoExistente) {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${selectedProductName}</td>
+                    <td>${selectedProductValue}</td>
+                    <td>${selectedProductQuantity}</td>
+                `;
+                tabelaProdutosAdicionados.appendChild(newRow);
+            }
 
-                if (!primeiroProdutoAdicionado) {
-                    divProdutosAdicionados.style.display = 'block';
-                    primeiroProdutoAdicionado = true;
-                }
+            if (!primeiroProdutoAdicionado) {
+                divProdutosAdicionados.style.display = 'block';
+                primeiroProdutoAdicionado = true;
+            }
 
-                produtoValorInput.value = '';
-                produtoSelect.value = '';
-                produtoQuantidadeInput.value = 1;
+            produtoValorInput.value = '';
+            produtoSelect.value = '';
+            produtoQuantidadeInput.value = 1;
 
-                alert(`Produto adicionado com ID: ${selectedProductId}`);
-            } else {
-                alert('Por favor, selecione um produto antes de adicionar.');
-            } 
-        }
+            alert(`Produto adicionado com ID: ${selectedProductId}`);
+        } else {
+            alert('Por favor, selecione um produto antes de adicionar.');
+        } 
+    }
+
 
         function voltarParaVenda() {
             document.getElementById('aba-venda').style.display = 'block';
             document.getElementById('aba-pagamento').style.display = 'none';
         }
+
+        document.getElementById('form-pagamento').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const metodoPagamento = document.getElementById('metodo-pagamento').value;
+        const parcelas = document.getElementById('parcelas').value;
+
+        // Montar os dados a serem enviados para o backend
+        const data = {
+            cliente_id: document.getElementById('cliente-select').value,
+            metodoPagamento: metodoPagamento,
+            parcelas: parcelas,
+            produtosAdicionados: produtosAdicionados  // Usar a variável global
+        };
+
+        // Enviar requisição POST para o backend
+        axios.post('/api/vendas', data)
+            .then(response => {
+                // Lógica após o sucesso (exibir mensagem, redirecionar, etc.)
+                console.log(response.data.message);
+                alert('Venda registrada com sucesso!');
+                // Redirecionar ou atualizar a página após o registro da venda
+                window.location.href = '/'; // Exemplo de redirecionamento para a página inicial
+            })
+            .catch(error => {
+                // Tratar erros (exibir mensagem de erro, etc.)
+                console.error('Erro ao registrar a venda:', error);
+                alert('Erro ao registrar a venda. Por favor, tente novamente.');
+            });
+    });
+
     </script>
 <script src="resources/js/app.js"></script>
 </body>
