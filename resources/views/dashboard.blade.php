@@ -79,25 +79,37 @@
                 </div>
                 
                 <div id="aba-pagamento" style="display: none;">
-                    <button type="button" class="btn btn-primary mt-3" onclick="voltarParaVenda()">voltar</button>
-
+                    <button type="button" class="btn btn-primary mt-3" onclick="voltarParaVenda()">Voltar para Venda</button>
+                    
                     <h1 class="mb-4">Formulário de Pagamento</h1>
-                    <form id="form-pagamento">
-                        <div class="mb-3">
-                            <label for="metodo-pagamento" class="form-label">Método de Pagamento</label>
-                            <select class="form-select mb-3" id="metodo-pagamento" name="metodoPagamento">
-                                <option value="credito">Cartão de Crédito</option>
-                                <option value="debito">Cartão de Débito</option>
-                                <option value="dinheiro">Dinheiro</option>
+                    <form id="form-pagamento" class="d-flex flex-column align-items-start">
+                        <div class="mb-3 d-flex align-items-center">
+                            <label for="metodo-pagamento" class="form-label me-3">Método de Pagamento</label>
+                            <select class="form-select mb-3 me-3" id="metodo-pagamento" name="metodoPagamento">
+                                <option value="opcao">Selecione uma opção</option>
+                                <option value="parcelamento">PARCELAMENTO</option>
                             </select>
+                
+                            <div id="parcelamento-container" style="display: none;">
+                                <div class="mb-4 d-flex align-items-center" id="parcelas-container">
+                                    <label for="parcelas" class="form-label me-2">Número de Parcelas</label>
+                                    <input type="number" class="form-control mb-8 me-8" id="parcelas" min="1" max="12" value="1" placeholder="Número de parcelas">
+                                    <button type="button" class="btn btn-success mb-2" id="btn-enviar-parcelas">Enviar Parcelas</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="valor-total-pagar" class="form-label">Valor Total a Pagar</label>
-                            <input type="text" class="form-control" id="valor-total-pagar" value="0.00" disabled>
+                
+                        <div>
+                            <div id="info-parcelas"></div>
                         </div>
-                        <button type="submit" class="btn btn-success">Finalizar Pagamento</button>
                     </form>
+                
+                    <!-- Div para conter as parcelas, abaixo do formulário de pagamento -->
+                    <div id="div-parcelas" class="mt-4"></div>
                 </div>
+                
+                
+                
             </div>
         </div>
     </div>

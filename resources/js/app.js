@@ -24,44 +24,44 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Erro ao criar produto:', error);
         }
     });
-    document.getElementById('create-cliente-form').addEventListener('submit', async function(event) {
+    document.getElementById('create-cliente-form').addEventListener('submit', async function (event) {
         event.preventDefault();
-    
+
         const cpfInput = document.getElementById('cliente-cpf');
         const cpfValue = cpfInput.value.replace(/\D/g, '');
-    
+
         if (cpfValue.length !== 11) {
             alert('CPF inválido! O CPF deve conter exatamente 11 números.');
             return;
         }
-    
+
         const nome = document.getElementById('cliente-nome').value;
-    
+
         try {
             const cpfCheckResponse = await axios.get(`/api/clientes/check-cpf/${cpfValue}`);
             if (cpfCheckResponse.data.exists) {
                 alert('CPF já cadastrado! Insira um CPF diferente.');
                 return;
             }
-    
+
             const createClienteResponse = await axios.post('/clientes', {
                 nome: nome,
                 cpf: cpfValue,
             });
-    
+
             console.log('Cliente criado com sucesso:', createClienteResponse.data.cliente);
-    
+
             document.getElementById('cliente-nome').value = '';
             cpfInput.value = '';
             $('#createClienteModal').modal('hide');
-            
+
             alert(createClienteResponse.data.message);
-            loadClientes(); 
+            loadClientes();
         } catch (error) {
             console.error('Erro ao criar cliente:', error);
         }
     });
-    
+
 
     const loadClientes = async () => {
         try {
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
             this.value = this.value.slice(0, 2);
         }
     });
-    
+
     document.getElementById('form-venda').addEventListener('submit', function (event) {
         event.preventDefault(); // Impede o envio padrão do formulário
 
@@ -155,9 +155,60 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('valor-total-pagar').value = valorTotalVenda.toFixed(2);
     });
 
-    function voltarParaVenda() {
-        document.getElementById('aba-venda').style.display = 'block';
-        document.getElementById('aba-pagamento').style.display = 'none';
+    function enviarParcelas() {
+        const parcelas = document.getElementById('parcelas').value;
+        document.getElementById('info-parcelas').innerText = `Você está parcelando em ${parcelas} parcelas`;
     }
-    
+
+    function voltarParaVenda() {
+        document.getElementById('aba-pagamento').style.display = 'none';
+        document.getElementById('aba-venda').style.display = 'block';
+    }
+
 });
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const metodoPagamentoSelect = document.getElementById('metodo-pagamento');
+    const parcelamentoContainer = document.getElementById('parcelamento-container');
+    const parcelasContainer = document.getElementById('parcelas-container');
+    const infoParcelas = document.getElementById('info-parcelas');
+    const btnEnviarParcelas = document.getElementById('btn-enviar-parcelas');
+    const divParcelas = document.getElementById('div-parcelas'); // Novo elemento div para conter as parcelas
+
+    metodoPagamentoSelect.addEventListener('change', function () {
+        const metodoSelecionado = metodoPagamentoSelect.value;
+
+        if (metodoSelecionado === 'parcelamento') {
+            parcelamentoContainer.style.display = 'block';
+        } else {
+            parcelamentoContainer.style.display = 'none';
+        }
+    });
+
+    btnEnviarParcelas.addEventListener('click', function () {
+        const parcelas = parseInt(document.getElementById('parcelas').value);
+    
+        if (isNaN(parcelas) || parcelas < 1 || parcelas > 12) {
+            alert('Número de parcelas inválido. Escolha um valor entre 1 e 12.');
+            return;
+        }
+    
+        divParcelas.innerHTML = '';
+    
+        for (let i = 1; i <= parcelas; i++) {
+            const divParcela = document.createElement('div');
+            divParcela.classList.add('mb-3'); 
+            divParcela.innerHTML = `<strong>Parcela ${i}:</strong> <input type="text" id="valor-parcela-${i}" class="form-control mb-2" style="width: 100px;" disabled>`;
+    
+            divParcelas.appendChild(divParcela);
+        }
+    
+        infoParcelas.innerText = `Você está parcelando em ${parcelas} parcelas`;
+    });
+});
+
+function voltarParaVenda() {
+    document.getElementById('aba-pagamento').style.display = 'none';
+    document.getElementById('aba-venda').style.display = 'block';
+}
