@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.getElementById('form-venda').addEventListener('submit', function (event) {
-        event.preventDefault(); 
+        event.preventDefault();
 
         document.getElementById('aba-venda').style.display = 'none';
         document.getElementById('aba-pagamento').style.display = 'block';
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     btnEnviarParcelas.addEventListener('click', function () {
         const parcelas = parseInt(document.getElementById('parcelas').value);
-    
+
         if (isNaN(parcelas) || parcelas < 1 || parcelas > 12) {
             alert('Número de parcelas inválido. Escolha um valor entre 1 e 12.');
             return;
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const valorTotalVendaStr = document.getElementById('valorTotals').innerText;
 
         const valorTotalVenda = parseFloat(valorTotalVendaStr);
-        
+
         console.log('Valor total da venda (string):', valorTotalVendaStr);
         console.log('Valor total da venda (número):', valorTotalVenda);
 
@@ -208,25 +208,24 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log(valorParcela);
 
         divParcelas.innerHTML = '';
-    
+
         for (let i = 1; i <= parcelas; i++) {
             const divParcela = document.createElement('div');
-            divParcela.classList.add('mb-3'); 
-            divParcela.innerHTML = `<strong>Parcela ${i}:</strong> <input type="text" id="valor-parcela-${i}" class="form-control mb-2" style="width: 100px;" value="${formatarValor(valorParcela)}" disabled>`;
-    
+            divParcela.classList.add('mb-3');
+            divParcela.innerHTML = `<strong>Parcela ${i}:</strong> <input type="text" id="valor-parcela-${i}" class="form-control mb-2" style="width: 100px;" value="${formatarValor(valorParcela)}">`;
+
             divParcelas.appendChild(divParcela);
         }
-    
+
         infoParcelas.innerText = `Você está parcelando em ${parcelas} parcelas`;
     });
 
     function formatarValor(valor) {
-        const valorFormatado = parseFloat(valor).toFixed(2);
-        return `R$ ${valorFormatado}`;
+        return parseFloat(valor).toFixed(2);
     }
-
-    valorTotalVenda = 1500;
     
+    valorTotalVenda = 1500;
+
 });
 
 
