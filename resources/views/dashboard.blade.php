@@ -210,40 +210,71 @@
     }
 
 
-        function voltarParaVenda() {
-            document.getElementById('aba-venda').style.display = 'block';
-            document.getElementById('aba-pagamento').style.display = 'none';
+    function voltarParaVenda() {
+        document.getElementById('aba-venda').style.display = 'block';
+        document.getElementById('aba-pagamento').style.display = 'none';
+    }
+
+    document.getElementById('form-pagamento').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const metodoPagamento = document.getElementById('metodo-pagamento').value;
+    const parcelas = document.getElementById('parcelas').value;
+
+    // Montar os dados a serem enviados para o backend
+    const data = {
+        cliente_id: document.getElementById('cliente-select').value,
+        metodoPagamento: metodoPagamento,
+        parcelas: parcelas,
+        produtosAdicionados: produtosAdicionados  // Usar a variável global
+    };
+
+
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    // Capturar o botão "Enviar Pagamento" pelo ID
+    const btnEnviarPagamento = document.getElementById('btn-enviar-pagamento');
+
+    btnEnviarPagamento.addEventListener('click', function () {
+        // Capturar o número de parcelas do input
+        const parcelas = parseInt(document.getElementById('parcelas').value);
+        if (isNaN(parcelas) || parcelas < 1 || parcelas > 12) {
+            alert('Número de parcelas inválido. Escolha um valor entre 1 e 12.');
+            return;
         }
 
-        document.getElementById('form-pagamento').addEventListener('submit', function(event) {
-        event.preventDefault();
+        // Array para armazenar os valores das parcelas
+        const valoresParcelas = [];
 
-        const metodoPagamento = document.getElementById('metodo-pagamento').value;
-        const parcelas = document.getElementById('parcelas').value;
+        // Capturar os valores de cada parcela
+        for (let i = 1; i <= parcelas; i++) {
+            const valorParcela = parseFloat(document.getElementById(`valor-parcela-${i}`).value);
+            valoresParcelas.push(valorParcela);
+        }
 
         // Montar os dados a serem enviados para o backend
         const data = {
             cliente_id: document.getElementById('cliente-select').value,
-            metodoPagamento: metodoPagamento,
+            metodoPagamento: 'parcelamento', // Valor fixo como parcelamento
             parcelas: parcelas,
-            produtosAdicionados: produtosAdicionados  // Usar a variável global
+            produtosAdicionados: produtosAdicionados, // Usar a variável global de produtos adicionados
+            valoresParcelas: valoresParcelas // Incluir os valores das parcelas no objeto de dados
         };
 
-        // Enviar requisição POST para o backend
+        // Requisição AJAX usando Axios
         axios.post('/api/vendas', data)
             .then(response => {
-                // Lógica após o sucesso (exibir mensagem, redirecionar, etc.)
                 console.log(response.data.message);
                 alert('Venda registrada com sucesso!');
-                // Redirecionar ou atualizar a página após o registro da venda
-                window.location.href = '/'; // Exemplo de redirecionamento para a página inicial
+                window.location.href = '/'; // Redirecionar após o registro da venda
             })
             .catch(error => {
-                // Tratar erros (exibir mensagem de erro, etc.)
                 console.error('Erro ao registrar a venda:', error);
                 alert('Erro ao registrar a venda. Por favor, tente novamente.');
             });
     });
+});
 
     </script>
 <script src="resources/js/app.js"></script>

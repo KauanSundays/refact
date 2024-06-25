@@ -162,17 +162,47 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Número de parcelas inválido. Escolha um valor entre 1 e 12.');
             return;
         }
+        
         valorTotalVenda = parseFloat(valorTotalsInput.innerText.replace('R$', '').trim());
         const valorParcela = valorTotalVenda / parcelas;
+        
         divParcelas.innerHTML = '';
+        let valoresParcelas = [];
+        let valorMedioParcelas = formatarValor(valorParcela);
+        let valorTotalParcelas = 0;
+    
         for (let i = 1; i <= parcelas; i++) {
             const divParcela = document.createElement('div');
             divParcela.classList.add('mb-3');
-            divParcela.innerHTML = `<strong>Parcela ${i}:</strong> <input type="text" id="valor-parcela-${i}" class="form-control mb-2 valor-parcela" style="width: 100px;" value="${formatarValor(valorParcela)}">`;
+    
+            let valorInicialParcela = (i === 1) ? valorMedioParcelas : valorParcela;
+            let inputParcela = `<strong>Parcela ${i}:</strong> <input type="text" id="valor-parcela-${i}" class="form-control mb-2 valor-parcela" style="width: 100px;" value="${formatarValor(valorInicialParcela)}">`;
+            divParcela.innerHTML = inputParcela;
             divParcelas.appendChild(divParcela);
+    
+            valoresParcelas.push({
+                index: i,
+                inputId: `valor-parcela-${i}`,
+                valor: valorInicialParcela
+            });
+    
+            valorTotalParcelas += parseFloat(valorInicialParcela);
         }
+    
         infoParcelas.innerText = `Você está parcelando R$ ${formatarValor(valorTotalVenda)} em ${parcelas} parcelas`;
+    
+        // Verificar se alguma parcela tem valor menor que 0.01
+        const parcelasInvalidas = valoresParcelas.filter(parcela => parcela.valor < 0.01);
+        if (parcelasInvalidas.length > 0) {
+            alert(`Uma ou mais parcelas têm valor inferior a 1 centavo. Ajuste o número de parcelas para garantir que todas tenham pelo menos 1 centavo.`);
+            // Ajustar valor das parcelas para o valor médio
+            valorMedioParcelas = formatarValor(valorTotalParcelas / parcelas);
+            valoresParcelas.forEach(parcela => {
+                document.getElementById(parcela.inputId).value = formatarValor(valorMedioParcelas);
+            });
+        }
     });
+    
 
     // Atualizar parcelas automaticamente
     divParcelas.addEventListener('input', function (event) {
