@@ -18,7 +18,7 @@
             <ul class="list-group">
                 @foreach ($vendas as $venda)
                     <li class="list-group-item">
-                        Venda #{{ $venda->id }} - Cliente: {{ $venda->cliente->nome }} - Total: R$ {{ number_format($venda->valor_total, 2, ',', '.') }}
+                        Venda #{{ $venda->id }} - Cliente: {{ $venda->cliente->nome }} - Total Parcelas: R$ {{ number_format($venda->valor_total_parcelas, 2, ',', '.') }}
                         <br>
                         Criado em: {{ $venda->created_at->format('d/m/Y H:i:s') }}
                         <a href="{{ route('vendas.mostrarParcelas', $venda->id) }}" class="btn btn-primary btn-sm float-right">Editar essa venda</a>

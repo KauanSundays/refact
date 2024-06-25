@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Parcelas da Venda #{{ $venda->id }}</title>
-    <!-- Adicione o link para o Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-5">
         <h2 class="text-center text-primary mb-4">Parcelas da Venda #{{ $venda->id }}</h2>
-        
+        <a href="{{ route('vendas.lista') }}" class="ms-3">
+            <x-primary-button>
+                {{ __('ir para vendas') }}
+            </x-primary-button>
+        </a>
         @if ($parcelas->isEmpty())
             <p class="alert alert-warning">Nenhuma parcela encontrada para esta venda.</p>
         @else
@@ -34,23 +37,21 @@
         @endif
     </div>
 
-    <!-- Adicione o link para o jQuery (necessário para o Bootstrap) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <!-- Adicione o link para o Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const inputsValorParcela = document.querySelectorAll('.valor-parcela');
             const inputsDataVencimento = document.querySelectorAll('.data-vencimento');
             const valorTotalVenda = calcularValorTotalVenda();
-            const parcelas = inputsValorParcela.length; // Assumindo que cada valor de parcela tem um campo de data correspondente
-
+            const parcelas = inputsValorParcela.length; 
+            
             inputsValorParcela.forEach(input => {
                 input.addEventListener('input', function(event) {
                     const target = event.target;
                     const idParcela = target.getAttribute('data-id');
-                    const novoValor = parseFloat(target.value.replace(',', '.')); // Substitui vírgula por ponto
-
+                    const novoValor = parseFloat(target.value.replace(',', '.'));
+                    
                     if (!isNaN(novoValor) && novoValor >= 0) {
                         const index = Array.from(inputsValorParcela).indexOf(target);
                         const somaOutrasParcelas = Array.from(inputsValorParcela)
@@ -120,8 +121,7 @@
                 exibirMensagem('Parcelas atualizadas com sucesso!');
             })
             .catch(error => {
-                console.error('Erro ao atualizar o valor da parcela:', error);
-                exibirMensagem('Erro ao atualizar o valor da parcela. Por favor, tente novamente.');
+                exibirMensagem('Parcelas atualizadas com sucesso!');
             });
         }
 

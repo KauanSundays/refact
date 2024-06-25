@@ -70,7 +70,13 @@ class VendaController extends Controller
 
     public function list()
     {
-        $vendas = Venda::all();
+        $vendas = Venda::with('parcelas', 'cliente')->get();
+
+        // Calcula a soma dos valores das parcelas para cada venda
+        foreach ($vendas as $venda) {
+            $venda->valor_total_parcelas = $venda->parcelas->sum('valor');
+        }
+
         return view('vendas.lista', compact('vendas'));
     }
 
