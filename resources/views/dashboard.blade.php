@@ -13,10 +13,15 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-10">
-                <!-- Aba 1: Venda -->
                 <div id="aba-venda">
+                    <a href="{{ route('vendas.lista') }}" class="ms-3">
+                        <x-primary-button class="btn btn-primary btn-sm">
+                            {{ __('ir para vendas') }}
+                        </x-primary-button>
+                    </a>
                     <form id="form-venda">
                         <h1 class="mb-4">Crie uma Venda</h1>
+                        
                         <div class="mb-3">
                             <label for="cliente-select" class="form-label">Clientes</label>
                             <div class="d-flex align-items-center">
@@ -108,7 +113,6 @@
                         </div>
                     </form>
                 
-                    <!-- Div para conter as parcelas, abaixo do formulário de pagamento -->
                     <div id="div-parcelas" class="mt-4"></div>
                 </div>
                 
@@ -132,7 +136,6 @@
     <script>
         let primeiroProdutoAdicionado = false;
         let valorTotalVenda = 0;
-    // Variável global para armazenar os produtos adicionados
     let produtosAdicionados = [];
 
     function adicionarProduto() {
@@ -158,7 +161,6 @@
         $('#valor-total').text(valorTotalVenda.toFixed(2)); 
         $('#valorTotals').text(valorTotalVenda.toFixed(2)); 
 
-        // Adicionar o produto à lista de produtos adicionados
         const produto = {
             id: selectedProductId,
             nome: selectedProductName,
@@ -221,53 +223,46 @@
     const metodoPagamento = document.getElementById('metodo-pagamento').value;
     const parcelas = document.getElementById('parcelas').value;
 
-    // Montar os dados a serem enviados para o backend
     const data = {
         cliente_id: document.getElementById('cliente-select').value,
         metodoPagamento: metodoPagamento,
         parcelas: parcelas,
-        produtosAdicionados: produtosAdicionados  // Usar a variável global
+        produtosAdicionados: produtosAdicionados
     };
 
 
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-    // Capturar o botão "Enviar Pagamento" pelo ID
     const btnEnviarPagamento = document.getElementById('btn-enviar-pagamento');
 
     btnEnviarPagamento.addEventListener('click', function () {
-        // Capturar o número de parcelas do input
         const parcelas = parseInt(document.getElementById('parcelas').value);
         if (isNaN(parcelas) || parcelas < 1 || parcelas > 12) {
             alert('Número de parcelas inválido. Escolha um valor entre 1 e 12.');
             return;
         }
 
-        // Array para armazenar os valores das parcelas
         const valoresParcelas = [];
 
-        // Capturar os valores de cada parcela
         for (let i = 1; i <= parcelas; i++) {
             const valorParcela = parseFloat(document.getElementById(`valor-parcela-${i}`).value);
             valoresParcelas.push(valorParcela);
         }
 
-        // Montar os dados a serem enviados para o backend
         const data = {
             cliente_id: document.getElementById('cliente-select').value,
-            metodoPagamento: 'parcelamento', // Valor fixo como parcelamento
+            metodoPagamento: 'parcelamento',
             parcelas: parcelas,
-            produtosAdicionados: produtosAdicionados, // Usar a variável global de produtos adicionados
-            valoresParcelas: valoresParcelas // Incluir os valores das parcelas no objeto de dados
+            produtosAdicionados: produtosAdicionados,
+            valoresParcelas: valoresParcelas
         };
 
-        // Requisição AJAX usando Axios
         axios.post('/api/vendas', data)
             .then(response => {
                 console.log(response.data.message);
                 alert('Venda registrada com sucesso!');
-                window.location.href = '/'; // Redirecionar após o registro da venda
+                window.location.href = '/';
             })
             .catch(error => {
                 console.error('Erro ao registrar a venda:', error);

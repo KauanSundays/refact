@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Lista de Vendas</title>
-    <!-- Adicione o link para o Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-5">
         <h2 class="text-center text-primary mb-4">Lista de Vendas</h2>
-        
+        <a href="{{ route('dashboard') }}" class="ms-3">
+            <x-primary-button>
+                {{ __('criar vendas') }}
+            </x-primary-button>
+        </a>
         @if ($vendas->isEmpty())
             <p class="alert alert-warning">Nenhuma venda encontrada.</p>
         @else
@@ -28,9 +31,7 @@
         @endif
     </div>
 
-    <!-- Adicione o link para o jQuery (necessário para o Bootstrap) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <!-- Adicione o link para o Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

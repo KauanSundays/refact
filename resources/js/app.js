@@ -16,9 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let valorTotalVenda = 0;
     let parcelas = 1; 
     
-    // Formatação de valores
     function formatarValor(valor) {
-        return parseFloat(valor).toFixed(2); // Formata o valor para duas casas decimais com ponto
+        return parseFloat(valor).toFixed(2);
     }
 
     document.getElementById('create-produto-form').addEventListener('submit', async function (event) {
@@ -76,7 +75,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Carregar clientes e produtos
     const loadClientes = async () => {
         try {
             const response = await axios.get('/api/clientes');
@@ -191,11 +189,9 @@ document.addEventListener('DOMContentLoaded', function () {
     
         infoParcelas.innerText = `Você está parcelando R$ ${formatarValor(valorTotalVenda)} em ${parcelas} parcelas`;
     
-        // Verificar se alguma parcela tem valor menor que 0.01
         const parcelasInvalidas = valoresParcelas.filter(parcela => parcela.valor < 0.01);
         if (parcelasInvalidas.length > 0) {
             alert(`Uma ou mais parcelas têm valor inferior a 1 centavo. Ajuste o número de parcelas para garantir que todas tenham pelo menos 1 centavo.`);
-            // Ajustar valor das parcelas para o valor médio
             valorMedioParcelas = formatarValor(valorTotalParcelas / parcelas);
             valoresParcelas.forEach(parcela => {
                 document.getElementById(parcela.inputId).value = formatarValor(valorMedioParcelas);

@@ -35,6 +35,13 @@
             <!-- Div para exibir mensagem de sucesso -->
             <div id="mensagem" class="mt-3 alert alert-success" style="display: none;"></div>
         @endif
+
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -66,8 +73,6 @@
                             }
                         });
 
-                        // Atualiza a mensagem de sucesso
-                        exibirMensagem('Valor da parcela atualizado com sucesso!');
                     }
                 });
             });
@@ -77,9 +82,6 @@
                     const target = event.target;
                     const idParcela = target.getAttribute('data-id');
                     const novaData = target.value;
-
-                    // Não faz nada específico para a data de vencimento aqui
-
                 });
             });
         });
@@ -99,13 +101,11 @@
 
         function atualizarValorParcela(element) {
             const idParcela = element.getAttribute('data-id');
-            const novoValor = element.value.replace(',', '.'); // Substitui vírgula por ponto
+            const novoValor = element.value.replace(',', '.'); 
 
-            // Constrói o objeto FormData com os dados a serem enviados
             const formData = new FormData();
             formData.append('parcelas[' + idParcela + '][valor]', novoValor);
 
-            // Envia a requisição AJAX para atualizar o valor da parcela específica
             fetch('/vendas/{{ $venda->id }}/parcelas/' + idParcela + '/atualizar-valor', {
                 method: 'POST',
                 body: formData
@@ -116,24 +116,16 @@
                 }
                 return response.json();
             })
-            .then(data => {
-                // Exemplo de feedback para o usuário (pode ser personalizado conforme sua necessidade)
-                exibirMensagem('Parcelas atualizadas com sucesso!');
-            })
-            .catch(error => {
-                exibirMensagem('Parcelas atualizadas com sucesso!');
-            });
+            
         }
 
         function atualizarDataVencimento(element) {
             const idParcela = element.getAttribute('data-id');
             const novaData = element.value;
 
-            // Constrói o objeto FormData com os dados a serem enviados
             const formData = new FormData();
             formData.append('parcelas[' + idParcela + '][data_vencimento]', novaData);
 
-            // Envia a requisição AJAX para atualizar a data de vencimento da parcela específica
             fetch('/vendas/{{ $venda->id }}/parcelas/' + idParcela + '/atualizar-data-vencimento', {
                 method: 'POST',
                 body: formData

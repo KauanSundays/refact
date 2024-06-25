@@ -26,15 +26,13 @@ class VendaController extends Controller
             'produtosAdicionados' => 'required|array',
             'produtosAdicionados.*.id' => 'required|exists:produtos,id',
             'produtosAdicionados.*.quantidade' => 'required|integer|min:1',
-            'valoresParcelas' => 'required|array|min:' . $request->parcelas, // Validação adicional para valores das parcelas
+            'valoresParcelas' => 'required|array|min:' . $request->parcelas,
         ]);
 
-        // Criar a venda principal
         $venda = Venda::create([
             'cliente_id' => $request->cliente_id,
         ]);
 
-        // Adicionar os produtos à tabela produto_venda
         foreach ($request->produtosAdicionados as $produto) {
             ProdutoVenda::create([
                 'venda_id' => $venda->id,
@@ -43,16 +41,12 @@ class VendaController extends Controller
             ]);
         }
 
-        // Verificar se o método de pagamento é parcelamento
         if ($request->metodoPagamento === 'parcelamento') {
-            // Data inicial de vencimento
             $dataVencimento = Carbon::now()->addDays(30);
 
-            // Criar as parcelas
             for ($i = 0; $i < $request->parcelas; $i++) {
                 $valorParcela = $request->valoresParcelas[$i];
 
-                // Criar uma nova parcela
                 Parcela::create([
                     'venda_id' => $venda->id,
                     'cliente_id' => $request->cliente_id,
@@ -60,7 +54,6 @@ class VendaController extends Controller
                     'data_vencimento' => $dataVencimento,
                 ]);
 
-                // Adicionar 1 mês para a próxima parcela
                 $dataVencimento->addMonths(1);
             }
         }
@@ -72,7 +65,6 @@ class VendaController extends Controller
     {
         $vendas = Venda::with('parcelas', 'cliente')->get();
 
-        // Calcula a soma dos valores das parcelas para cada venda
         foreach ($vendas as $venda) {
             $venda->valor_total_parcelas = $venda->parcelas->sum('valor');
         }
@@ -82,23 +74,22 @@ class VendaController extends Controller
 
     public function edit($id)
     {
-        // Lógica para buscar a venda pelo ID e retornar a view de edição
         $venda = Venda::findOrFail($id);
         return view('vendas.editar', compact('venda'));
     }
 
     public function parcelas($id)
     {
-        $venda = Venda::findOrFail($id); // Busca a venda pelo ID
-        $parcelas = $venda->parcelas; // Obtém todas as parcelas relacionadas à venda
+        $venda = Venda::findOrFail($id);
+        $parcelas = $venda->parcelas;
 
         return view('vendas.parcelas', compact('venda', 'parcelas'));
     }
 
     public function mostrarParcelas($id)
     {
-        $venda = Venda::findOrFail($id); // Busca a venda pelo ID
-        $parcelas = $venda->parcelas; // Obtém todas as parcelas relacionadas à venda
+        $venda = Venda::findOrFail($id);
+        $parcelas = $venda->parcelas;
 
         return view('vendas.mostrar_parcelas', compact('venda', 'parcelas'));
     }

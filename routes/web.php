@@ -61,5 +61,4 @@ Route::get('/vendas/{venda_id}/parcelas/{parcela_id}/detalhes', [ParcelaControll
 
 Route::post('/vendas/{venda_id}/parcelas/atualizar-todas', [ParcelaController::class, 'atualizarTodasParcelas'])
     ->name('parcelas.atualizarTodos');
-// Inclua o arquivo de rotas de autenticação
 require __DIR__ . '/auth.php';
