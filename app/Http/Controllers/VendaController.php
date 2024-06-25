@@ -67,4 +67,33 @@ class VendaController extends Controller
 
         return response()->json(['message' => 'Venda registrada com sucesso!', 'venda' => $venda]);
     }
+
+    public function list()
+    {
+        $vendas = Venda::all();
+        return view('vendas.lista', compact('vendas'));
+    }
+
+    public function edit($id)
+    {
+        // Lógica para buscar a venda pelo ID e retornar a view de edição
+        $venda = Venda::findOrFail($id);
+        return view('vendas.editar', compact('venda'));
+    }
+
+    public function parcelas($id)
+    {
+        $venda = Venda::findOrFail($id); // Busca a venda pelo ID
+        $parcelas = $venda->parcelas; // Obtém todas as parcelas relacionadas à venda
+
+        return view('vendas.parcelas', compact('venda', 'parcelas'));
+    }
+
+    public function mostrarParcelas($id)
+    {
+        $venda = Venda::findOrFail($id); // Busca a venda pelo ID
+        $parcelas = $venda->parcelas; // Obtém todas as parcelas relacionadas à venda
+
+        return view('vendas.mostrar_parcelas', compact('venda', 'parcelas'));
+    }
 }

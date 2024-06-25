@@ -9,7 +9,7 @@ class Venda extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['cliente_id', 'parcelas'];
+    protected $fillable = ['cliente_id', 'parcelas', 'valor'];
 
     // Relação com o modelo Cliente
     public function cliente()
@@ -21,5 +21,11 @@ class Venda extends Model
     public function produtos()
     {
         return $this->belongsToMany(Produto::class)->withPivot('quantidade');
+    }
+
+    // Relação um para muitos com o modelo Parcela
+    public function parcelas()
+    {
+        return $this->hasMany(Parcela::class);
     }
 }
