@@ -14,12 +14,67 @@ document.addEventListener('DOMContentLoaded', function () {
     const divParcelas = document.getElementById('div-parcelas');
 
     let valorTotalVenda = 0;
-    let parcelas = 1; // Variável global para armazenar o número de parcelas
-
+    let parcelas = 1; 
+    
     // Formatação de valores
     function formatarValor(valor) {
         return parseFloat(valor).toFixed(2); // Formata o valor para duas casas decimais com ponto
     }
+
+    document.getElementById('create-produto-form').addEventListener('submit', async function (event) {
+        event.preventDefault();
+        const nome = document.getElementById('produto-nome').value;
+        const valor = document.getElementById('produto-valor-creater').value;
+
+        try {
+            const response = await axios.post('/produtos', { nome, valor });
+            document.getElementById('produto-nome').value = '';
+            document.getElementById('produto-valor-creater').value = '';
+
+            $('#createProdutoModal').modal('hide');
+            alert(response.data.message);
+            loadProdutos();
+        } catch (error) {
+            console.error('Erro ao criar produto:', error);
+        }
+    });
+    document.getElementById('create-cliente-form').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const cpfInput = document.getElementById('cliente-cpf');
+        const cpfValue = cpfInput.value.replace(/\D/g, '');
+
+        if (cpfValue.length !== 11) {
+            alert('CPF inválido! O CPF deve conter exatamente 11 números.');
+            return;
+        }
+
+        const nome = document.getElementById('cliente-nome').value;
+
+        try {
+            const cpfCheckResponse = await axios.get(`/api/clientes/check-cpf/${cpfValue}`);
+            if (cpfCheckResponse.data.exists) {
+                alert('CPF já cadastrado! Insira um CPF diferente.');
+                return;
+            }
+
+            const createClienteResponse = await axios.post('/clientes', {
+                nome: nome,
+                cpf: cpfValue,
+            });
+
+            console.log('Cliente criado com sucesso:', createClienteResponse.data.cliente);
+
+            document.getElementById('cliente-nome').value = '';
+            cpfInput.value = '';
+            $('#createClienteModal').modal('hide');
+
+            alert(createClienteResponse.data.message);
+            loadClientes();
+        } catch (error) {
+            console.error('Erro ao criar cliente:', error);
+        }
+    });
 
     // Carregar clientes e produtos
     const loadClientes = async () => {
@@ -87,6 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
         abaVenda.style.display = 'none';
         abaPagamento.style.display = 'block';
         valorTotalVenda = parseFloat(valorTotalSpan.innerText.replace('R$', '').trim());
+        
     });
 
     // Método de pagamento
@@ -149,56 +205,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!isNaN(valor)) {
                 target.value = formatarValor(valor);
             }
-        }
-    });
-
-    // Evento de submit para criar novo cliente
-    document.getElementById('create-cliente-form').addEventListener('submit', async function (event) {
-        event.preventDefault();
-        
-        const nome = document.getElementById('cliente-nome').value;
-        const cpf = document.getElementById('cliente-cpf').value;
-
-        try {
-            const response = await axios.post('/api/clientes', {
-                nome: nome,
-                cpf: cpf
-            });
-
-            console.log('Novo cliente criado:', response.data);
-            alert('Novo cliente criado com sucesso!');
-            
-            loadClientes();
-            
-            $('#createClienteModal').modal('hide');
-        } catch (error) {
-            console.error('Erro ao criar novo cliente:', error);
-            alert('Erro ao criar novo cliente. Verifique o console para mais detalhes.');
-        }
-    });
-
-    // Evento de submit para criar novo produto
-    document.getElementById('create-produto-form').addEventListener('submit', async function (event) {
-        event.preventDefault();
-        
-        const nomeProduto = document.getElementById('produto-nome').value;
-        const valorProduto = document.getElementById('produto-valor-creater').value;
-
-        try {
-            const response = await axios.post('/api/produtos', {
-                nome: nomeProduto,
-                valor: parseFloat(valorProduto)
-            });
-
-            console.log('Novo produto criado:', response.data);
-            alert('Novo produto criado com sucesso!');
-            
-            loadProdutos();
-            
-            $('#createProdutoModal').modal('hide');
-        } catch (error) {
-            console.error('Erro ao criar novo produto:', error);
-            alert('Erro ao criar novo produto. Verifique o console para mais detalhes.');
         }
     });
 

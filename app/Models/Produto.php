@@ -10,9 +10,4 @@ class Produto extends Model
     use HasFactory;
 
     protected $fillable = ['nome', 'valor'];
-
-    public function vendas()
-    {
-        return $this->belongsToMany(Venda::class)->withPivot('quantidade');
-    }
 }
